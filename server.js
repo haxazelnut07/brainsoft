@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
 const port = 5000;
+const cors = require("cors");
 
+app.use(cors())
 app.use(express.json()); // Middleware untuk parsing JSON
 
 // Database sementara untuk menyimpan pesan terenkripsi
