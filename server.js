@@ -3,7 +3,7 @@ const app = express();
 const port = 5000;
 const cors = require("cors");
 
-app.use(cors())
+app.use(cors());
 app.use(express.json()); // Middleware untuk parsing JSON
 
 // Database sementara untuk menyimpan pesan terenkripsi
@@ -11,8 +11,11 @@ const messages = [];
 
 // Endpoint untuk mengirim pesan
 app.post("/send", (req, res) => {
-    const data = req.body;
-    messages.push(data);
+    const { sender, recipient, message } = req.body;
+    if (!sender || !recipient || !message) {
+        return res.status(400).json({ status: "error", message: "Semua field harus diisi!" });
+    }
+    messages.push({ sender, recipient, message });
     res.json({ status: "success", message: "Pesan terkirim!" });
 });
 
