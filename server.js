@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json()); // Middleware untuk parsing JSON
 
 // Database sementara untuk menyimpan pesan terenkripsi
-const messages = [];
+let messages = [];
 
 // Endpoint untuk mengirim pesan
 app.post("/send", (req, res) => {
@@ -15,8 +15,16 @@ app.post("/send", (req, res) => {
     if (!sender || !recipient || !message) {
         return res.status(400).json({ status: "error", message: "Semua field harus diisi!" });
     }
-    messages.push({ sender, recipient, message });
-    res.json({ status: "success", message: "Pesan terkirim!" });
+    
+    const timestamp = new Date().toISOString();
+    messages.push({ sender, recipient, message, timestamp });
+    res.json({ status: "success", message: "Pesan terkirim!", timestamp });
+    
+    // Reset chat setelah 1 detik
+    setTimeout(() => {
+        messages = [];
+        console.log("Pesan telah direset.");
+    }, 1000);
 });
 
 // Endpoint untuk menerima pesan berdasarkan penerima
